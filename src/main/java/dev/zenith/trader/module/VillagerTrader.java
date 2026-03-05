@@ -5,6 +5,7 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.Lists;
 import com.zenith.Proxy;
+import com.zenith.cache.data.chunk.WorldTimeData;
 import com.zenith.cache.data.entity.EntityLiving;
 import com.zenith.cache.data.inventory.Container;
 import com.zenith.discord.Embed;
@@ -23,6 +24,7 @@ import com.zenith.module.api.Module;
 import com.zenith.network.client.ClientSession;
 import com.zenith.network.codec.PacketHandlerCodec;
 import com.zenith.network.codec.PacketHandlerStateCodec;
+import com.zenith.util.ComponentSerializer;
 import com.zenith.util.RequestFuture;
 import com.zenith.util.math.MathHelper;
 import com.zenith.util.timer.Timer;
@@ -30,6 +32,7 @@ import com.zenith.util.timer.Timers;
 import dev.zenith.trader.VillagerTraderConfig;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
+import net.kyori.adventure.text.Component;
 import org.geysermc.mcprotocollib.protocol.data.ProtocolState;
 import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.MetadataTypes;
 import org.geysermc.mcprotocollib.protocol.data.game.entity.metadata.VillagerData;
@@ -772,9 +775,22 @@ public class VillagerTrader extends Module {
             .filter(e -> !interactedVillagersCache.asMap().containsKey(e.getUuid()))
             .map(e -> (EntityLiving) e)
             .filter(e -> trade.villagerProfession == getVillagerProfession(e))
+            .filter(e -> !villagerNameContains(e, "ignore"))
             .min(Comparator.comparingDouble(e -> e.distanceSqTo(CACHE.getPlayerCache().getThePlayer())));
     }
 
+    private boolean villagerNameContains(EntityLiving villager, String contains) {
+        var nameMetadata = villager.getMetadata().get(2);
+        if (nameMetadata == null) return false;
+        if (nameMetadata.getType() != MetadataTypes.OPTIONAL_CHAT) return false;
+        if (nameMetadata.getValue() == null) return false;
+        var nameOptional = (Optional<Component>) nameMetadata.getValue();
+        if (nameOptional.isEmpty()) return false;
+        var nameComponent = nameOptional.get();
+        var nameString = ComponentSerializer.serializePlain(nameComponent);
+        return nameString.toLowerCase().contains(contains.toLowerCase());
+    }
+    
     private VillagerProfession getVillagerProfession(EntityLiving villager) {
         var data = villager.getMetadataValue(18, MetadataTypes.VILLAGER_DATA, VillagerData.class);
         if (data == null) {
