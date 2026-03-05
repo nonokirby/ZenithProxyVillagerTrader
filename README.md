@@ -1,3 +1,7 @@
+# Fork Info
+
+Added logic to prevent trading with any villager named `ignore` while ignoring capitalization.
+There is no toggle, or way to modify the string without recompiling. It is expected that anyone using this fork will either use it as is, or recompile with their own string.
 # ZenithProxy Villager Trader Plugin
 
 Automatically buys and sells items with villagers.
