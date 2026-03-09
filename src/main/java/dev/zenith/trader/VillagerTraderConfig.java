@@ -18,11 +18,13 @@ public class VillagerTraderConfig {
     public LinkedHashMap<String, Trade> trades = new LinkedHashMap<>();
 
     public static class Trade {
-        public boolean enabled = true;
+        public boolean enabled = true;.
+        public boolean checkVillagerName = false;
         public VillagerProfession villagerProfession = VillagerProfession.CLERIC;
         public String inputItem1 = ItemRegistry.AIR.name();
         public String inputItem2 = ItemRegistry.AIR.name();
         public String outputItem = ItemRegistry.AIR.name();
+        public String villagerName = "";
         public BlockPos inputItem1Chest = BlockPos.ZERO;
         public BlockPos inputItem2Chest = BlockPos.ZERO;
         public BlockPos outputChest = BlockPos.ZERO;
@@ -50,6 +52,10 @@ public class VillagerTraderConfig {
             return Objects.equals(inputItem1, ItemRegistry.EMERALD.name()) || Objects.equals(inputItem2, ItemRegistry.EMERALD.name());
         }
 
+        public boolean shouldCheckName(){
+            return !Objects.equals(villagerName, "") && checkVillagerName;
+        }
+
         public ItemData getInputItem1() {
             return ItemRegistry.REGISTRY.get(inputItem1);
         }
@@ -61,5 +67,6 @@ public class VillagerTraderConfig {
         public ItemData getOutputItem() {
             return ItemRegistry.REGISTRY.get(outputItem);
         }
+
     }
 }
