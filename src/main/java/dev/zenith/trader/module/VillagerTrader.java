@@ -775,11 +775,11 @@ public class VillagerTrader extends Module {
             .filter(e -> !interactedVillagersCache.asMap().containsKey(e.getUuid()))
             .map(e -> (EntityLiving) e)
             .filter(e -> trade.villagerProfession == getVillagerProfession(e))
-            .filter(e -> villagerNameContains(e, trade.villagerName))
+            .filter(e -> villagerNameContains(e, trade.villagerName, trade.shouldCheckName))
             .min(Comparator.comparingDouble(e -> e.distanceSqTo(CACHE.getPlayerCache().getThePlayer())));
     }
 
-    private boolean villagerNameContains(EntityLiving villager, String contains) {
+    private boolean villagerNameContains(EntityLiving villager, String contains, Boolean check) {
         var nameMetadata = villager.getMetadata().get(2);
         if (nameMetadata == null) return false;
         if (nameMetadata.getType() != MetadataTypes.OPTIONAL_CHAT) return false;
@@ -788,7 +788,7 @@ public class VillagerTrader extends Module {
         if (nameOptional.isEmpty()) return false;
         var nameComponent = nameOptional.get();
         var nameString = ComponentSerializer.serializePlain(nameComponent);
-        return nameString.toLowerCase().contains(contains.toLowerCase()) && trade.shouldCheckName();
+        return nameString.toLowerCase().contains(contains.toLowerCase()) && check;
     }
     
     private VillagerProfession getVillagerProfession(EntityLiving villager) {
