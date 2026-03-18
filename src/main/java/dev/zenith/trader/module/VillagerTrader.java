@@ -775,7 +775,7 @@ public class VillagerTrader extends Module {
             .filter(e -> !interactedVillagersCache.asMap().containsKey(e.getUuid()))
             .map(e -> (EntityLiving) e)
             .filter(e -> trade.villagerProfession == getVillagerProfession(e))
-            .filter(e -> villagerNameContains(e, trade.villagerName, trade.shouldCheckName))
+            .filter(e -> villagerNameContains(e, trade.villagerName, trade.checkVillagerName))
             .min(Comparator.comparingDouble(e -> e.distanceSqTo(CACHE.getPlayerCache().getThePlayer())));
     }
 
