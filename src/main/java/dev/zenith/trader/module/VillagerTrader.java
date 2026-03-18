@@ -780,6 +780,7 @@ public class VillagerTrader extends Module {
     }
 
     private boolean villagerNameContains(EntityLiving villager) {
+        var trade = tradeIterator.current();
         var contains = trade.villagerName;
         var nameMetadata = villager.getMetadata().get(2);
         if (nameMetadata == null) return false;
