@@ -18,7 +18,7 @@ public class VillagerTraderConfig {
     public LinkedHashMap<String, Trade> trades = new LinkedHashMap<>();
 
     public static class Trade {
-        public boolean enabled = true;.
+        public boolean enabled = true;
         public boolean checkVillagerName = false;
         public VillagerProfession villagerProfession = VillagerProfession.CLERIC;
         public String inputItem1 = ItemRegistry.AIR.name();
