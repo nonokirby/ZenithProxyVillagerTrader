@@ -163,7 +163,9 @@ public class VillagerTraderCommand extends Command {
                         "set <id> outputEnchants clear",
                         "set <id> outputEnchants list",
                         "set <id> postTradeStore <none/to_restock/to_overflow>",
-                        "set <id> overflowChest <x> <y> <z>"
+                        "set <id> overflowChest <x> <y> <z>",
+                        "set <id> checkNamesContain on/off",
+                        "set <id> checkNamesFor <name>"
                     );
                     c.getSource().getEmbed()
                         .title("Trade Settings")
@@ -562,6 +564,23 @@ public class VillagerTraderCommand extends Command {
                         trade.overflowChestPos = pos;
                         c.getSource().getEmbed()
                             .title("Overflow Chest Set");
+                        return OK;
+                    })))
+                    .then(literal("checkNameContains").then(argument("checkNameContainsToggle", toggle()).executes(c -> {
+                        var id = CustomStringArgumentType.getString(c, "id");
+                        if (!PLUGIN_CONFIG.trades.containsKey(id)) {
+                            c.getSource().getEmbed()
+                                .title("Trade ID Not Found")
+                                .addField("ID", id)
+                                .description(printAllTrades());
+                            c.getSource().getData().put("list", true);
+                            return ERROR;
+                        }
+                        var trade = PLUGIN_CONFIG.trades.get(id);
+                        trade.checkNameContains = getToggle(c, "checkNameContainsToggle");
+                        c.getSource().getEmbed()
+                            .title("Check villager name contains " + toggleStrCaps(trade.checkVillagerName))
+                            .description(printTrade(id, trade));
                         return OK;
                     })))
                 ))
