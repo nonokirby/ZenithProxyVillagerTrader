@@ -583,6 +583,24 @@ public class VillagerTraderCommand extends Command {
                             .description(printTrade(id, trade));
                         return OK;
                     })))
+                      //checknamefor
+                    .then(literal("nameShouldContain").then(argument("checkNameContainsToggle", wordWithChars()).executes(c -> {
+                        var id = CustomStringArgumentType.getString(c, "id");
+                        if (!PLUGIN_CONFIG.trades.containsKey(id)) {
+                            c.getSource().getEmbed()
+                                .title("Trade ID Not Found")
+                                .addField("ID", id)
+                                .description(printAllTrades());
+                            c.getSource().getData().put("list", true);
+                            return ERROR;
+                        }
+                        var trade = PLUGIN_CONFIG.trades.get(id);
+                        trade.villagerName = getString(c, "nameShouldContain");
+                        c.getSource().getEmbed()
+                            .title("Villager name must contain " + getString(c, "nameShouldContain"))
+                            .description(printTrade(id, trade));
+                        return OK;
+                    })))
                 ))
             .then(literal("del").then(argument("id", wordWithChars()).executes(c -> {
                 var id = CustomStringArgumentType.getString(c, "id");
