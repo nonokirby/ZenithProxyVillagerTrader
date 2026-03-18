@@ -566,7 +566,7 @@ public class VillagerTraderCommand extends Command {
                             .title("Overflow Chest Set");
                         return OK;
                     })))
-                    .then(literal("checkNameContains").then(argument("checkNameContainsToggle", toggle()).executes(c -> {
+                    .then(literal("checkVillagerName").then(argument("checkNameContainsToggle", toggle()).executes(c -> {
                         var id = CustomStringArgumentType.getString(c, "id");
                         if (!PLUGIN_CONFIG.trades.containsKey(id)) {
                             c.getSource().getEmbed()
@@ -577,13 +577,12 @@ public class VillagerTraderCommand extends Command {
                             return ERROR;
                         }
                         var trade = PLUGIN_CONFIG.trades.get(id);
-                        trade.checkNameContains = getToggle(c, "checkNameContainsToggle");
+                        trade.checkVillagerName = getToggle(c, "checkNameContainsToggle");
                         c.getSource().getEmbed()
                             .title("Check villager name contains " + toggleStrCaps(trade.checkVillagerName))
                             .description(printTrade(id, trade));
                         return OK;
                     })))
-                      //checknamefor
                     .then(literal("nameShouldContain").then(argument("checkNameContainsToggle", wordWithChars()).executes(c -> {
                         var id = CustomStringArgumentType.getString(c, "id");
                         if (!PLUGIN_CONFIG.trades.containsKey(id)) {
