@@ -775,13 +775,11 @@ public class VillagerTrader extends Module {
             .filter(e -> !interactedVillagersCache.asMap().containsKey(e.getUuid()))
             .map(e -> (EntityLiving) e)
             .filter(e -> trade.villagerProfession == getVillagerProfession(e))
-            .filter(e -> villagerNameContains(e))
+            .filter(e -> villagerNameContains(e, trade.villagerName))
             .min(Comparator.comparingDouble(e -> e.distanceSqTo(CACHE.getPlayerCache().getThePlayer())));
     }
 
-    private boolean villagerNameContains(EntityLiving villager) {
-        var trade = tradeIterator.current();
-        var contains = trade.villagerName;
+    private boolean villagerNameContains(EntityLiving villager, String contains) {
         var nameMetadata = villager.getMetadata().get(2);
         if (nameMetadata == null) return false;
         if (nameMetadata.getType() != MetadataTypes.OPTIONAL_CHAT) return false;
